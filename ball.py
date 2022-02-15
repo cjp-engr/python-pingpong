@@ -1,48 +1,58 @@
-import random
-from turtle import Turtle
-from random import Random
-
-
 class Ball:
-    def __init__(self, screen):
+    def __init__(self, ball, screen, player_one, player_two):
+        self.ball = ball
         self.screen = screen
-        self.ball = Turtle()
-        self.set_up_ball()
-        self.is_ball_alive = True
-        self.move_ball()
+        self.player_one = player_one
+        self.player_two = player_two
+        self.setup_ball()
+        self.movement_ball()
 
-    def set_up_ball(self):
-        self.ball.color("white")
+    def setup_ball(self):
+        self.ball.speed("normal")
         self.ball.shape("circle")
+        self.ball.color("white")
         self.ball.shapesize(1, 1)
+        self.ball.penup()
+        self.ball.goto(0, 0)
+        self.ball.dx = 0.1
+        self.ball.dy = -0.1
 
-    def move_ball(self):
-        # TODO: MAKE THE INITIAL BALL THROW RANDOMLY
-        self.ball.goto(Random().randint(-500, 500), 345)
-        # WHILE THE VERTICAL WALL IS NOT YET COLLIDED SET TO WHILE TRUE
-        self.horizontal_wall_collision_ball()
+    def movement_ball(self):
+        while True:
+            self.screen.update()
+            # move the ball
+            self.ball.setx(self.ball.xcor() + self.ball.dx)
+            self.ball.sety(self.ball.ycor() + self.ball.dy)
+            self.border_checking()
+            print(self.ball.position())
 
-    def horizontal_wall_collision_ball(self):
-        hball = self.ball
-        right_x_axis = 0 <= hball.xcor() <= 455
-        upper_y_axis = 0 <= hball.ycor() <= 350
-        left_x_axis = -455 <= hball.xcor() <= 0
-        lower_y_axis = -350 <= hball.ycor() <= 0
+    def border_checking(self):
+        # 300 < 320 < 360
+        y1_player_one = int(self.player_one.player_one_position())
+        y2_player_one = int(y1_player_one + 60)
+        y1_player_two = int(self.player_two.player_two_position())
+        y2_player_two = int(y1_player_two + 60)
+        y_ball = int(self.ball.ycor())
+        x_ball = int(self.ball.xcor())
+        s_height = int(self.screen.window_height())
+        s_width = int(self.screen.window_width())
+        player_one_ball = y1_player_one <= y_ball <= y2_player_one
+        player_two_ball = y1_player_two <= y_ball <= y2_player_two
+        print(s_height / 2)
+        print(s_width / 2)
+        if y_ball >= (s_height / 2) - 30:
+            self.ball.sety((s_height / 2) - 30)
+            self.ball.dy *= -1
+        if y_ball <= -(s_height / 2) + 30:
+            self.ball.sety(-(s_height / 2) + 30)
+            self.ball.dy *= -1
+        if x_ball >= (s_width / 2) - 50:
+            if player_one_ball or player_two_ball:
+                self.ball.setx((s_width / 2) - 50)
+                self.ball.dx *= -1
+        if x_ball <= -(s_width / 2) + 50:
+            if player_one_ball or player_two_ball:
+                self.ball.setx(-(s_width / 2) + 50)
+                self.ball.dx *= -1
 
-        if right_x_axis and upper_y_axis:
-            hball.goto(480, Random().randint(0, 350))
-        elif right_x_axis and lower_y_axis:
-            hball.goto(480, Random().randint(-350, 0))
-        elif left_x_axis and upper_y_axis:
-            hball.goto(-480, Random().randint(0, 350))
-        elif left_x_axis and lower_y_axis:
-            hball.goto(-480, Random().randint(-350, 0))
-        print(hball.xcor(), hball.ycor())
 
-    def paddle_collision_ball(self):
-        # TODO: IF THE BALL COLLIDED WITH THE PADDLE, THE BALL BOUNCES
-        pass
-
-    def vertical_wall_collision_ball(self):
-        # TODO: IF THE BALL COLLIDED WITH THE WALL, THE PLAYER LOSES
-        pass

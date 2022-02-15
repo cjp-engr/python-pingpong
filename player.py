@@ -1,31 +1,24 @@
-from turtle import Screen
+from turtle import Screen, Turtle
 
 
 class Player:
 
-    def __init__(self):
+    def __init__(self, screen):
         self.segments = []
-        self.create_players_paddle()
-        self.head = self.segments[0]
+        self.screen = screen
 
-    def create_players_paddle(self):
-        pass
-
-    def up(self):
+    def player_up(self):
         if not self.segments[len(self.segments) - 1].ycor() >= 340:
-            print(self.segments[0].position())
             self.set_movement(90)
 
-    def down(self):
+    def player_down(self):
         if not self.segments[0].ycor() <= -340:
-            print(self.segments[0].position())
             self.set_movement(270)
 
     def set_movement(self, heading):
-        screen = Screen()
         for seg_num in range(len(self.segments) - 1, -1, -1):
-            screen.tracer(False)
+            self.screen.tracer(False)
             self.segments[seg_num - 1].setheading(heading)
             self.segments[seg_num - 1].forward(20)
-            screen.update()
+            self.screen.update()
 
