@@ -1,5 +1,12 @@
+from players_score import PlayersScore
+
+
 class Ball:
-    def __init__(self, ball, screen, player_one, player_two):
+
+    def __init__(self, ball, screen, player_one, player_two, player_score):
+        self.ps = player_score
+        self.player_one_sc = 0
+        self.player_two_sc = 0
         self.ball = ball
         self.screen = screen
         self.player_one = player_one
@@ -21,10 +28,10 @@ class Ball:
         while True:
             self.screen.update()
             # move the ball
+            self.ball.speed("fastest")
             self.ball.setx(self.ball.xcor() + self.ball.dx)
             self.ball.sety(self.ball.ycor() + self.ball.dy)
             self.border_checking()
-            print(self.ball.position())
 
     def border_checking(self):
         # 300 < 320 < 360
@@ -38,21 +45,29 @@ class Ball:
         s_width = int(self.screen.window_width())
         player_one_ball = y1_player_one <= y_ball <= y2_player_one
         player_two_ball = y1_player_two <= y_ball <= y2_player_two
-        print(s_height / 2)
-        print(s_width / 2)
-        if y_ball >= (s_height / 2) - 30:
-            self.ball.sety((s_height / 2) - 30)
+        border = 50
+
+        if y_ball >= (s_height / 2) - border:
+            self.ball.sety((s_height / 2) - border)
             self.ball.dy *= -1
-        if y_ball <= -(s_height / 2) + 30:
-            self.ball.sety(-(s_height / 2) + 30)
+        if y_ball <= -(s_height / 2) + border:
+            self.ball.sety(-(s_height / 2) + border)
             self.ball.dy *= -1
-        if x_ball >= (s_width / 2) - 50:
-            if player_one_ball or player_two_ball:
-                self.ball.setx((s_width / 2) - 50)
+        if x_ball >= (s_width / 2) - border:
+            if player_two_ball:
+                self.ball.setx((s_width / 2) - border)
                 self.ball.dx *= -1
+                self.player_two_sc += 1
+                self.ps.get_player_two_score(self.player_two_sc)
         if x_ball <= -(s_width / 2) + 50:
-            if player_one_ball or player_two_ball:
-                self.ball.setx(-(s_width / 2) + 50)
+            if player_one_ball:
+                self.ball.setx(-(s_width / 2) + border)
                 self.ball.dx *= -1
+                self.player_one_sc += 1
+                self.ps.get_player_one_score(self.player_one_sc)
+
+
+
+
 
 

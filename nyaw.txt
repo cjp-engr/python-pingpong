@@ -1,0 +1,47 @@
+class PlayersScore:
+
+    def __init__(self, screen):
+        self.screen = screen
+        self.segments_a = []
+        # self.create_score_segment(0)
+
+    def segment(self, score_seg, position):
+        self.screen.update()
+        score_seg.clear()
+        score_seg.color("white")
+        score_seg.shape("square")
+        score_seg.penup()
+        score_seg.goto(position)
+
+    def create_score_segment(self, sc):
+        i = 0
+        if sc == 0:
+            print(sc)
+            self.segments_a = []
+            sc = SCORE_0
+        if sc == 1:
+            print(sc)
+            self.segments_a = []
+            sc = SCORE_1
+        if sc == 2:
+            print(sc)
+            self.segments_a = []
+            sc = SCORE_2
+        while i < len(sc):
+            for position in sc[i]:
+                self.score_segment_a(position)
+                print(position)
+            i += 1
+
+    def score_segment_a(self, position):
+        score_a = Turtle()
+        self.segment(score_a, position)
+        self.segments_a.append(score_a)
+        score_a.clear()
+
+    def get_player_one_score(self, sc):
+        self.create_score_segment(sc)
+
+    def get_player_two_score(self, sc):
+        print(sc)
+        pass
